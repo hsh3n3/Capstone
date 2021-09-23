@@ -54,7 +54,6 @@ public class PlayerMovement : MonoBehaviour
         
         if (isGrounded && velocity.y < 0)
          {
-            velocity.y = -2f; //forces our player all the way to the ground.
             controller.stepOffset = originalStepOffset; // make it so you can climb small objects, such as stairs when walking.
             isAirborn = false;
          }
