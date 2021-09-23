@@ -1,6 +1,8 @@
 /*Originally created by Hunter Hughes on 9-21-2021
 9-22-2021 Hunter - Updated to add upward collision checks to fix jumping under something, and stepOffset changes to make jumping up against vertical objects smoother.
-                   Also added crouch ability, plus some more checks to keep air speed consistent between standing/crouching. Cannot jump while crouching. - need to fix standing up under objects above you while crouching.
+                   Also added crouch ability, plus some more checks to keep air speed consistent between standing/crouching. Cannot jump while crouching. - need to fix standing up under objects too low
+
+9-23-2021 Hunter - Fixed crouching by using spherecasting to detect overhead objects. 
 */
 
 
@@ -11,29 +13,30 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController controller; //Character object in scene that we can make move
-
-    public float speed = 12f; //movement speed
-    public float walkSpeed = 12f;
-    public float crouchSpeed = 6f;
-    public float gravity = -19.62f; //Earth's gravity * 2. Doubled because regular gravity feels a bit too "floaty" in video game world.
-    public float jumpHeight = 3f;//jump height
-    public Vector3 playerHeight = new Vector3(1,1,1);
-    public Vector3 crouchHeight = new Vector3(1, 0.65f, 1);
-
     public Transform groundCheck; //To check if you are on the ground.
-    public float groundDistance = 0.4f; 
-    public LayerMask groundMask; //To set a layer in unity to be 'ground' objects for collision checking.
+    public LayerMask groundMask; //To set a layer in unity to be 'ground' objects for ground collision checking.
+    public LayerMask levelMask; // To set a layer in unity to be 'level' objects for overhead collision checking.
 
-    public float originalStepOffset = 0.7f;
-    public float originaljumpHeight = 3f;
+    private float speed = 12f; //movement speed
+    private float walkSpeed = 12f;
+    private float crouchSpeed = 6f;
+    private float gravity = -19.62f; //Earth's gravity * 2. Doubled because regular gravity feels a bit too "floaty" in video game world.
+    private float jumpHeight = 3f;//jump height
+    private Vector3 playerHeight = new Vector3(1,1,1);
+    private Vector3 crouchHeight = new Vector3(1, 0.65f, 1);
+    private float groundDistance = 0.4f;
+    private float originalStepOffset = 0.7f;
+    private float originaljumpHeight = 3f;
 
 
-    Vector3 velocity;
+    Vector3 velocity; //For physics
     bool isGrounded; //Checks if player is on ground or not
-    bool isCrouching;
-    bool isAirborn;
+    bool isCrouching; //Checks if crouching
+    bool isAirborn; //Checks if in the air
+    bool canStand; //Checks if you are allowed to stand up or not. (crouching under objects)
 
-    // Update is called once per frame
+
+
     void Update()
     {
         //creates tiny sphere that will check collision with anything under the player. If so, will set isGrounded = true.
@@ -68,10 +71,13 @@ public class PlayerMovement : MonoBehaviour
             controller.stepOffset = 0; //Makes jumping up against a vertical object smooth by removing step offset.
         }
 
-        if (Input.GetKey(KeyCode.C))
+        //Keep player crouching if there is a low object above their head.
+        if (Input.GetKey(KeyCode.C) || !canStand)
         {
             isCrouching = true;
         }
+
+        //Let player stand up if not.
         else
         {
             isCrouching = false;
@@ -81,11 +87,27 @@ public class PlayerMovement : MonoBehaviour
         //if crouching, set crouching height and remove jump
         if (isCrouching)
         {
-            //controller.height = crouchHeight;
             jumpHeight = 0f;
             speed = crouchSpeed;
             controller.gameObject.transform.localScale = crouchHeight;
+
+
+            //Overhead Collision Detection
+            RaycastHit hit;
+            Vector3 p1 = transform.position + controller.center; //Start ray at player character
+
+            //If overhead object is too low to stand up under
+            if (Physics.SphereCast(p1, controller.radius, transform.up, out hit, 2.5f, levelMask))
+            {
+                canStand = false; 
+            }
+            else
+            {
+                canStand = true;
+            }
         }
+
+
         //revert to non-crouch settings
         else
         {
@@ -93,6 +115,7 @@ public class PlayerMovement : MonoBehaviour
             jumpHeight = originaljumpHeight;
             speed = walkSpeed;
             controller.gameObject.transform.localScale = playerHeight;
+            canStand = true;
         }
 
         //keep speed consistent in the air
@@ -100,7 +123,6 @@ public class PlayerMovement : MonoBehaviour
         {
             speed = walkSpeed;
         }
-
 
 
         float x = Input.GetAxis("Horizontal");
