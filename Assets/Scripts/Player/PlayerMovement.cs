@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
 
     private float speed = 12f; //movement speed
     private float walkSpeed = 12f;
+    private float sprintSpeed = 18f;
     private float crouchSpeed = 6f;
     private float gravity = -19.62f; //Earth's gravity * 2. Doubled because regular gravity feels a bit too "floaty" in video game world.
     private float jumpHeight = 3f;//jump height
@@ -33,6 +34,9 @@ public class PlayerMovement : MonoBehaviour
     bool isGrounded; //Checks if player is on ground or not
     bool isCrouching; //Checks if crouching
     bool isAirborn; //Checks if in the air
+    bool isSprinting;
+    bool sprintLock;
+    bool isWalking;
     bool canStand; //Checks if you are allowed to stand up or not. (crouching under objects)
 
 
@@ -41,6 +45,8 @@ public class PlayerMovement : MonoBehaviour
     {
         //creates tiny sphere that will check collision with anything under the player. If so, will set isGrounded = true.
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+      
 
         //This condition is to check for things above the character. If you hit a ceiling, make the character fall back down.
         if ((controller.collisionFlags & CollisionFlags.Above) != 0)
@@ -83,6 +89,19 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
+
+        if (Input.GetKey(KeyCode.LeftShift) && !isCrouching && isGrounded)
+        {
+            isSprinting = true;
+            speed = sprintSpeed;
+        }
+
+        else
+        {
+            speed = walkSpeed;
+            isSprinting = false;
+        }
+
         //if crouching, set crouching height and remove jump
         if (isCrouching)
         {
@@ -98,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
             //If overhead object is too low to stand up under
             if (Physics.SphereCast(p1, controller.radius, transform.up, out hit, 2.5f, levelMask))
             {
-                canStand = false; 
+                canStand = false;
             }
             else
             {
@@ -112,16 +131,25 @@ public class PlayerMovement : MonoBehaviour
         {
             //controller.height = playerHeight;
             jumpHeight = originaljumpHeight;
-            speed = walkSpeed;
+
             controller.gameObject.transform.localScale = playerHeight;
             canStand = true;
+            isCrouching = false;
         }
+       
 
         //keep speed consistent in the air
-        if (isAirborn)
+        if (isAirborn && isSprinting)
+        {
+            speed = sprintSpeed;
+        }
+
+        if (isAirborn && isCrouching)
         {
             speed = walkSpeed;
         }
+
+
 
 
         float x = Input.GetAxis("Horizontal");
