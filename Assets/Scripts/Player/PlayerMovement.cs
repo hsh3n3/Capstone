@@ -6,65 +6,57 @@
 */
 
 
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController controller; //Character object in scene that we can make move
     public Transform groundCheck; //To check if you are on the ground.
-    public LayerMask groundMask; //To set a layer in unity to be 'ground' objects for ground collision checking.
-    public LayerMask levelMask; // To set a layer in unity to be 'level' objects for overhead collision checking.
+    public LayerMask levelMask; // To set a layer in unity to be 'level' objects for overhead collision checking and ground checking.
 
-    private float speed = 12f; //movement speed
-    private float walkSpeed = 12f;
-    private float sprintSpeed = 18f;
-    private float sprintJump = 1.5f;
-    private float crouchSpeed = 6f;
-    private float gravity = -19.62f; //Earth's gravity * 2. Doubled because regular gravity feels a bit too "floaty" in video game world.
-    private float jumpHeight = 3f;//jump height
-    private Vector3 playerHeight = new Vector3(1,1,1);
-    private Vector3 crouchHeight = new Vector3(1, 0.65f, 1);
-    private float groundDistance = 0.4f;
-    private float originalStepOffset = 0.7f;
-    private float originaljumpHeight = 3f;
+    private float speed; //changing variable for player speed
+    public float walkSpeed = 9; //Speed when walking
+    public float sprintSpeed = 15; //Speed when sprinting
+    public float crouchSpeed = 4.5f; //Speed when crouching
+
+    public float jumpHeight = 3; //Jump height
+    public float sprintJump = 1.5f; //Jump height when sprinting
+    private float originaljumpHeight; //used to revert jump height
+
+    public float gravity = -19.62f; //Earth's gravity * 2. Doubled because regular gravity feels a bit too "floaty" in video game world.
+
+    public Vector3 playerHeight = new Vector3(1, 1, 1); //Height of the player when standing
+    public Vector3 crouchHeight = new Vector3(1, 0.7f, 1); //Height of the player when crouching
+
+    private float groundDistance = 0.3f; //Used for ground collision detection. Do not change
+    private float originalStepOffset = 0.7f; // Used for climbing small obstacles.
 
 
     Vector3 velocity; //For physics
     bool isGrounded; //Checks if player is on ground or not
     bool isCrouching; //Checks if crouching
     bool isAirborn; //Checks if in the air
-    bool isSprinting;
-    bool isWalking;
+    bool isSprinting; //Checks if sprinting
     bool canStand; //Checks if you are allowed to stand up or not. (crouching under objects)
 
+
+   void Start()
+    {
+        originaljumpHeight = jumpHeight;
+        speed = walkSpeed;
+    }
+         
 
 
     void Update()
     {
+        ///////////////////////////////////___________COLLISION CHECKS_____________/////////////////////////////////////////////////////
+
         //creates tiny sphere that will check collision with anything under the player. If so, will set isGrounded = true.
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, levelMask);
 
         Vector3 p1 = transform.position + controller.center; //Start ray at player character
-
-        RaycastHit downHit;
-       /* if(Physics.SphereCast(p1, controller.radius, Vector3.down, out downHit, 1.4f, groundMask))
-        { 
-            isGrounded = true;
-        }
-        else
-        {
-            isGrounded = false;
-        }
-       */
-
-        if(isGrounded)
-        {
-            Debug.Log("grounded");
-        }
-
-
 
         //This condition is to check for things above the character. If you hit a ceiling, make the character fall back down.
         if ((controller.collisionFlags & CollisionFlags.Above) != 0)
@@ -77,23 +69,20 @@ public class PlayerMovement : MonoBehaviour
 
         if (isGrounded && velocity.y < 0)
         {
-            //velocity.y = -2f; //forces our player all the way to the ground.
             controller.stepOffset = originalStepOffset; // make it so you can climb small objects, such as stairs when walking.
+            velocity.y = 0;
+        }
+
+        if (isGrounded)
+        {
             isAirborn = false;
         }
-
-
-
-        //Check to see if we are in the air
-        if (velocity.y > 0)
-        {
-            isAirborn = true;
-        }
-
         else
         {
+            isAirborn = true;
             controller.stepOffset = 0; //Makes jumping up against a vertical object smooth by removing step offset.
         }
+
 
         //Keep player crouching if there is a low object above their head.
         if (Input.GetKey(KeyCode.C) || !canStand)
@@ -108,38 +97,62 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
+        //////////////////////////////////////___________SPRINT CHECKS________________//////////////////////////////////////////////////////
+        // There are many to help with keeping momentum in the air and not allowing sprint under certain circumstances.
 
+        //If sprint key, not crouching, and on the ground, allow sprint
         if (Input.GetKey(KeyCode.LeftShift) && !isCrouching && isGrounded)
         {
             isSprinting = true;
-            speed = sprintSpeed;
         }
-
+        
+        //if not hitting sprint key, and not crouching but on the ground, turn off sprint.
         else if(!Input.GetKey(KeyCode.LeftShift) && !isCrouching && isGrounded)
         {
-            speed = walkSpeed;
             isSprinting = false;
         }
-
+        //If sprint key, and is crouching on the ground, DO NOT allow sprint.
         else if((Input.GetKey(KeyCode.LeftShift) && isCrouching && isGrounded))
         {
             isSprinting = false;
         }
+
+        //If sprinting, change jump height and run speed.
+        if (isSprinting)
+        {
+            jumpHeight = sprintJump;
+            speed = sprintSpeed;
+        }
+        //Otherwise keep speed regular.
+        else
+        {
+            speed = walkSpeed;
+        }
+
+        ////////////////////////////////////////__________CROUCH CHECKS______________//////////////////////////////////////////////////////////////
 
         //if crouching, set crouching height and remove jump
         if (isCrouching)
         {
             jumpHeight = 0f;
             speed = crouchSpeed;
-            controller.gameObject.transform.localScale = crouchHeight;
 
-
-            //Overhead Collision Detection
-            RaycastHit upHit;
-
-            //If overhead object is too low to stand up under
-            if (Physics.SphereCast(p1, controller.radius, transform.up, out upHit, 2.5f, levelMask))
+            //Slow transform to make crouch animation smoother
+            if(controller.gameObject.transform.localScale.y > crouchHeight.y)
             {
+                controller.gameObject.transform.localScale -= (new Vector3(0,1,0) * Time.deltaTime);
+                controller.Move(new Vector3(0, -1.75f, 0) * Time.deltaTime);
+            }
+            //Making sure player is exactly crouch height
+            else 
+            {
+                controller.gameObject.transform.localScale = crouchHeight;
+            }
+           
+            //Overhead Collision Detection to prevent standing under low objects
+            RaycastHit upHit;
+            if (Physics.SphereCast(p1, controller.radius, transform.up, out upHit, 2.5f, levelMask))
+            {   
                 canStand = false;
             }
             else
@@ -149,47 +162,66 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        //revert to non-crouch settings
+
+        //If not crouching, stand up
         else
         {
-            //controller.height = playerHeight;
             jumpHeight = originaljumpHeight;
 
-            controller.gameObject.transform.localScale = playerHeight;
+            //Slow transform to make uncrouch animation smoother
+            if (controller.gameObject.transform.localScale.y < playerHeight.y)
+            {
+                controller.gameObject.transform.localScale += (new Vector3(0, 1, 0) * Time.deltaTime);
+                controller.Move(new Vector3(0, 1.75f, 0) * Time.deltaTime);
+            }
+            //Making sure player is exactly normal height
+            else
+            {
+                controller.gameObject.transform.localScale = playerHeight;
+
+            }
+
             canStand = true;
             isCrouching = false;
         }
 
-
-        if (isAirborn && isCrouching)
+        //Airborn crouch checks to maintain original speed instead of crouching speed
+        if (isAirborn && isCrouching && !isSprinting)
         {
             speed = walkSpeed;
         }
-
-       if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.Space) && isGrounded && !isCrouching)
+        else if (isAirborn && isCrouching && isSprinting)
         {
-            isSprinting = true;
-            jumpHeight = sprintJump;
+            speed = sprintSpeed;
         }
 
 
 
+        /////////////////////////////////////////____________________MOVEMENT________________////////////////////////////////////////////////
 
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
-        Vector3 move = transform.right * x + transform.forward * z; //can be called to allow movement of player object.
+        //Called by controller.Move to tell unity HOW to move the character.
+        Vector3 move = transform.right * x + transform.forward * z;
 
-        controller.Move(move * speed * Time.deltaTime); //Calls move and multiplies by speed multiplier and uses deltaTime to make sure it is independent of framerate.
+        //Actual movement considering speed multiplier.
+        controller.Move(move * speed * Time.deltaTime); 
 
-       //This allows us to jump in game
+        //Jumping
         if(Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
 
-        velocity.y += gravity * Time.deltaTime; //Gravity calculation for player velocity
+        //Falling
+        if (isAirborn)
+        {
+            velocity.y += gravity * Time.deltaTime; //Gravity calculation for player velocity
+        }
 
-        controller.Move(velocity * Time.deltaTime); //Making player fall downward.
+        //Downward Gravity on player movement
+        controller.Move(velocity * Time.deltaTime);
+
     }
 }
