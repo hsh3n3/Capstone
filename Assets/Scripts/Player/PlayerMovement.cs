@@ -20,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     private float speed = 12f; //movement speed
     private float walkSpeed = 12f;
     private float sprintSpeed = 18f;
+    private float sprintJump = 1.5f;
     private float crouchSpeed = 6f;
     private float gravity = -19.62f; //Earth's gravity * 2. Doubled because regular gravity feels a bit too "floaty" in video game world.
     private float jumpHeight = 3f;//jump height
@@ -35,7 +36,6 @@ public class PlayerMovement : MonoBehaviour
     bool isCrouching; //Checks if crouching
     bool isAirborn; //Checks if in the air
     bool isSprinting;
-    bool sprintLock;
     bool isWalking;
     bool canStand; //Checks if you are allowed to stand up or not. (crouching under objects)
 
@@ -46,7 +46,25 @@ public class PlayerMovement : MonoBehaviour
         //creates tiny sphere that will check collision with anything under the player. If so, will set isGrounded = true.
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-      
+        Vector3 p1 = transform.position + controller.center; //Start ray at player character
+
+        RaycastHit downHit;
+       /* if(Physics.SphereCast(p1, controller.radius, Vector3.down, out downHit, 1.4f, groundMask))
+        { 
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
+       */
+
+        if(isGrounded)
+        {
+            Debug.Log("grounded");
+        }
+
+
 
         //This condition is to check for things above the character. If you hit a ceiling, make the character fall back down.
         if ((controller.collisionFlags & CollisionFlags.Above) != 0)
@@ -56,17 +74,18 @@ public class PlayerMovement : MonoBehaviour
                 velocity.y = -velocity.y;
             }
         }
-        
-        
+
         if (isGrounded && velocity.y < 0)
-         {
+        {
+            //velocity.y = -2f; //forces our player all the way to the ground.
             controller.stepOffset = originalStepOffset; // make it so you can climb small objects, such as stairs when walking.
             isAirborn = false;
-         }
+        }
+
 
 
         //Check to see if we are in the air
-        if(velocity.y > 0)
+        if (velocity.y > 0)
         {
             isAirborn = true;
         }
@@ -96,9 +115,14 @@ public class PlayerMovement : MonoBehaviour
             speed = sprintSpeed;
         }
 
-        else
+        else if(!Input.GetKey(KeyCode.LeftShift) && !isCrouching && isGrounded)
         {
             speed = walkSpeed;
+            isSprinting = false;
+        }
+
+        else if((Input.GetKey(KeyCode.LeftShift) && isCrouching && isGrounded))
+        {
             isSprinting = false;
         }
 
@@ -111,11 +135,10 @@ public class PlayerMovement : MonoBehaviour
 
 
             //Overhead Collision Detection
-            RaycastHit hit;
-            Vector3 p1 = transform.position + controller.center; //Start ray at player character
+            RaycastHit upHit;
 
             //If overhead object is too low to stand up under
-            if (Physics.SphereCast(p1, controller.radius, transform.up, out hit, 2.5f, levelMask))
+            if (Physics.SphereCast(p1, controller.radius, transform.up, out upHit, 2.5f, levelMask))
             {
                 canStand = false;
             }
@@ -136,17 +159,17 @@ public class PlayerMovement : MonoBehaviour
             canStand = true;
             isCrouching = false;
         }
-       
 
-        //keep speed consistent in the air
-        if (isAirborn && isSprinting)
-        {
-            speed = sprintSpeed;
-        }
 
         if (isAirborn && isCrouching)
         {
             speed = walkSpeed;
+        }
+
+       if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.Space) && isGrounded && !isCrouching)
+        {
+            isSprinting = true;
+            jumpHeight = sprintJump;
         }
 
 
