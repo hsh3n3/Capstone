@@ -120,7 +120,6 @@ public class PlayerMovement : MonoBehaviour
         //If sprinting, change jump height and run speed.
         if (isSprinting)
         {
-            jumpHeight = sprintJump;
             speed = sprintSpeed;
         }
         //Otherwise keep speed regular.
@@ -195,7 +194,10 @@ public class PlayerMovement : MonoBehaviour
             speed = sprintSpeed;
         }
 
-
+        if (isSprinting)
+        {
+            jumpHeight = sprintJump;
+        }
 
         /////////////////////////////////////////____________________MOVEMENT________________////////////////////////////////////////////////
 
