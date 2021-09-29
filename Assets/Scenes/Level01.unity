@@ -1866,7 +1866,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RayRange: 5
   itemText: {fileID: 557431616}
-  crosshair: {fileID: 0}
+  crosshair: {fileID: 1671777224}
 --- !u!1 &928391521
 GameObject:
   m_ObjectHideFlags: 0
