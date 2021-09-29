@@ -25,9 +25,18 @@ public class RayInteract : MonoBehaviour
             Component[] objComponents = hitObj.GetComponents(typeof(Component));
             for (int i = 0; i < objComponents.Length; i++)
             {
-                if (objComponents[i].GetType().GetMethod(FunctionName) != null)
+                if (objComponents[i].GetType().GetMethod(FunctionName) != null) //if the object has an Interact function
                 {
+                    if (!hitObj.GetComponent<InteractOutline>()) //let the outline script do its thing
+                    {
+                        hitObj.AddComponent<InteractOutline>();
+                    }
+
+                    //hunter stick your canvas scripting here
+
+                    //if (mousebutton)
                     objComponents[i].GetType().GetMethod(FunctionName).Invoke(objComponents[i], null); //if FunctionName is found on any components attached to the hitObj, call it
+                    //endif
                 }
             }
         }
