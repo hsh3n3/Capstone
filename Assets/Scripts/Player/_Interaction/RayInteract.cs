@@ -1,18 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RayInteract : MonoBehaviour
 {
     public float RayRange = 5f; //how far to cast ray
     LayerMask Layers; //the layers that the raycast can hit. mautomatically set to only the "interactable" layer
 
+    public Text itemText;
+    public Text crosshair;
+
     string FunctionName = "Interact"; //function to be called on the object we're interacting with. has to exist in a component attached to the object
+
 
     void Awake()
     {
         Layers = -1;
         Layers = 1 << 9; //layermasks are so unnecessarily complicated
+        itemText.enabled = true;
     }
     void Update()
     {
@@ -33,12 +39,26 @@ public class RayInteract : MonoBehaviour
                     }
 
                     //hunter stick your canvas scripting here
+                    itemText.text = hitObj.name;
+                    itemText.enabled = true;
+
+                    crosshair.text = "o";
+             
 
                     //if (mousebutton)
                     objComponents[i].GetType().GetMethod(FunctionName).Invoke(objComponents[i], null); //if FunctionName is found on any components attached to the hitObj, call it
                     //endif
                 }
+               
+               
+               
             }
+        }
+        else
+        {
+            itemText.enabled = false;
+            itemText.text = "";
+            crosshair.text = ".";
         }
     }
 }
