@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Testinteract : MonoBehaviour
 {
+
     public void Interact()
     {
         print("it works");
