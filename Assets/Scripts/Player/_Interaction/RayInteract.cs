@@ -7,12 +7,10 @@ public class RayInteract : MonoBehaviour
 {
     public float RayRange = 5f; //how far to cast ray
     LayerMask Layers; //the layers that the raycast can hit. mautomatically set to only the "interactable" layer
-
+    public Material outlineMaterial;
     public Text itemText;
     public Text crosshair;
-
     string FunctionName = "Interact"; //function to be called on the object we're interacting with. has to exist in a component attached to the object
-
 
     void Awake()
     {
@@ -49,9 +47,6 @@ public class RayInteract : MonoBehaviour
                     objComponents[i].GetType().GetMethod(FunctionName).Invoke(objComponents[i], null); //if FunctionName is found on any components attached to the hitObj, call it
                     //endif
                 }
-               
-               
-               
             }
         }
         else
