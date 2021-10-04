@@ -2457,26 +2457,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4ae8e30aa228d548b8038611a787191, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 9
-  runSpeed: 11
-  crouchSpeed: 4.5
-  limitDiagonalSpeed: 1
-  toggleRun: 0
-  jumpSpeed: 8
-  gravity: 19.62
-  fallingDamageThreshold: 10
-  slideWhenOverSlopeLimit: 0
-  slideOnTaggedObjects: 0
-  slideSpeed: 12
-  airControl: 0
-  antiBumpFactor: 0.75
-  antiBunnyHopFactor: 1
-  playerHeight: {x: 1, y: 1, z: 1}
-  crouchHeight: {x: 1, y: 0.7, z: 1}
+  controller: {fileID: 908175975}
+  groundCheck: {fileID: 107597336}
   levelMask:
     serializedVersion: 2
     m_Bits: 704
-  controller: {fileID: 908175975}
+  walkSpeed: 9
+  sprintSpeed: 15
+  crouchSpeed: 4.5
+  jumpHeight: 3
+  sprintJump: 1.5
+  gravity: -19.62
+  playerHeight: {x: 1, y: 1, z: 1}
+  crouchHeight: {x: 1, y: 0.7, z: 1}
 --- !u!114 &908175978
 MonoBehaviour:
   m_ObjectHideFlags: 0
