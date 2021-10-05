@@ -9,6 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: InputSystem.inputsettings
+  m_Script: {fileID: 11500000, guid: d9c2df471e9206c46a79ba06d4e51858, type: 3}
+  m_Name: TestItem01
   m_EditorClassIdentifier: 
+  prefab: {fileID: 0}
+  type: 3
+  description: This item is a test of the inventory system.
+  itemName: Test Item

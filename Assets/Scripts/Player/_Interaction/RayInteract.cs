@@ -12,11 +12,17 @@ public class RayInteract : MonoBehaviour
     public Text crosshair;
     string FunctionName = "Interact"; //function to be called on the object we're interacting with. has to exist in a component attached to the object
 
+    private GameObject canvas;
+    public Text pickupText;
+    public InventoryObject inventory;
+
+    private float pickupTextCountDown;
     void Awake()
     {
         Layers = -1;
         Layers = 1 << 9; //layermasks are so unnecessarily complicated
         itemText.enabled = true;
+        pickupText.text = "";
     }
     void Update()
     {
@@ -29,8 +35,8 @@ public class RayInteract : MonoBehaviour
             Component[] objComponents = hitObj.GetComponents(typeof(Component));
             for (int i = 0; i < objComponents.Length; i++)
             {
-                if (objComponents[i].GetType().GetMethod(FunctionName) != null) //if the object has an Interact function
-                {
+                //if (objComponents[i].GetType().GetMethod(FunctionName) != null //if the object has an Interact function
+               // {
                     if (!hitObj.GetComponent<InteractOutline>()) //let the outline script do its thing
                     {
                         hitObj.AddComponent<InteractOutline>();
@@ -41,19 +47,40 @@ public class RayInteract : MonoBehaviour
                     itemText.enabled = true;
 
                     crosshair.text = "o";
-             
 
-                    //if (mousebutton)
-                    objComponents[i].GetType().GetMethod(FunctionName).Invoke(objComponents[i], null); //if FunctionName is found on any components attached to the hitObj, call it
-                    //endif
-                }
+                    //Picking up Items in game world
+                    if (Input.GetKey(KeyCode.Mouse0))
+                    {
+                        //If this item can be picked up, pick up and destroy.
+                        var item = hitObj.GetComponent<AddItem>();
+                        if (item)
+                        {
+                            inventory.AddItem(item.item, 1); //Add to inventory
+                            Destroy(hitObj.gameObject); //Destroy item you just picked up from game world
+                            pickupText.text = ("Picked up " + item.item.itemName); //Displays item you picked up
+                            pickupTextCountDown = 1f; //To start fade out of text over time
+                        }
+                        else if (objComponents[i].GetType().GetMethod(FunctionName) != null) //If item has a function attached 
+                        {
+                            objComponents[i].GetType().GetMethod(FunctionName).Invoke(objComponents[i], null); //if FunctionName is found on any components attached to the hitObj, call it
+                        }
+                    }
             }
         }
         else
-        {
+        {   //Revert to normal settings if not looking at object
             itemText.enabled = false;
             itemText.text = "";
             crosshair.text = ".";
+        }
+        if(pickupTextCountDown > 0) //Start countdown to make item pickup text fade out over time
+        {
+            pickupText.color = new Color(1, 1, 1, pickupTextCountDown);
+            pickupTextCountDown -= .25f * Time.deltaTime;
+        }
+        if(pickupTextCountDown <= 0) //(just for good measure) once count down is over, return object text to be nothing.
+        {
+            pickupText.text = "";
         }
     }
 }

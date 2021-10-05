@@ -9,6 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: InputSystem.inputsettings
+  m_Script: {fileID: 11500000, guid: 1b0979a3260cf2143a4155d032284f9b, type: 3}
+  m_Name: FoodItem01
   m_EditorClassIdentifier: 
+  prefab: {fileID: 0}
+  type: 2
+  description: This is a test item to restore player health.
+  itemName: Test Food
+  restoreHealthValue: 25

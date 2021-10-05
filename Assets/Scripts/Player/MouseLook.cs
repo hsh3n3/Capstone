@@ -17,8 +17,8 @@ public class MouseLook : MonoBehaviour
     private float timer = 2.5f;
     private float a = 1.0f;
 
-    public GameObject blackScreenParent;
-    public Image blackScreen;
+    private GameObject blackScreenParent;
+    private Image blackScreen;
 
 
     // Start is called before the first frame update
@@ -51,10 +51,10 @@ public class MouseLook : MonoBehaviour
         else {
             playerBody.Rotate(Vector3.up * mouseX); //Horizontal rotation
         }
-        if (a > 0f)
+        if (a > 0f) // Fade in from black screen
         {
             blackScreen.color = new Color(0, 0, 0, a);
-            a -= 0.25f * Time.deltaTime;
+            a -= 0.5f * Time.deltaTime;
         }
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Vertical Rotation.
 
