@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MouseLook : MonoBehaviour
 {
@@ -13,12 +14,23 @@ public class MouseLook : MonoBehaviour
 
     float xRotation = 0f;
 
+    private float timer = 2.5f;
+
+    public GameObject blackScreenParent;
+    public Image blackScreen;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        xRotation = 0f;
+        xRotation = -90f; //Starting rotation looking up to go along with player in bed.
         Cursor.lockState = CursorLockMode.Locked; //Locks cursor to middle of the screen and hides it.
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+
+        blackScreenParent = GameObject.Find("BlackScreen");
+        blackScreen = blackScreenParent.GetComponent(typeof(Image)) as Image;
+        blackScreen.color = new Color(0, 0, 0, 0);
+
     }
 
     // Update is called once per frame
@@ -30,8 +42,16 @@ public class MouseLook : MonoBehaviour
         xRotation -= mouseY; //-= so that we can look up or down normally, can switch to += if we wish to invert look controls.
         xRotation = Mathf.Clamp(xRotation, -90f, 90f); //Used to clamp rotation, so that you cannot look up or down more than 180 degrees.
 
+        if(timer > 0) // Keeping player looking up while eyes open
+        {
+            xRotation = -90f;
+            timer -= 1 * Time.deltaTime;
+        }
+       else {
+            playerBody.Rotate(Vector3.up * mouseX); //Horizontal rotation
+        }
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Vertical Rotation.
-        playerBody.Rotate(Vector3.up * mouseX); //Horizontal rotation
+
 
 
     }

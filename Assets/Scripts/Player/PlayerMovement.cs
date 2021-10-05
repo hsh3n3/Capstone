@@ -62,6 +62,10 @@ public class PlayerMovement : MonoBehaviour
     private bool canStand;
     private bool isCrouching;
 
+    private float originalJumpSpeed;
+
+    private float timer = 2.5f; //for freezing movement when waking up.
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -70,10 +74,12 @@ public class PlayerMovement : MonoBehaviour
         rayDistance = controller.height * .5f + controller.radius;
         slideLimit = controller.slopeLimit - .1f;
         jumpTimer = antiBunnyHopFactor;
+        originalJumpSpeed = jumpSpeed;
     }
 
     void FixedUpdate()
     {
+      
         float inputX = Input.GetAxis("Horizontal");
         float inputY = Input.GetAxis("Vertical");
         // If both horizontal and vertical are used simultaneously, limit speed (if allowed), so the total doesn't exceed normal move speed
@@ -215,12 +221,25 @@ public class PlayerMovement : MonoBehaviour
                 moveDirection = myTransform.TransformDirection(moveDirection);
             }
         }
+        if (timer > 0) // Keeping player frozen while eyes open
+        {
+            moveDirection.x = 0;
+            moveDirection.z = 0;
+            jumpSpeed = 0f;
+            speed = 0;
+            timer -= 1 * Time.deltaTime;
+        }
+        else
+        {
+            jumpSpeed = originalJumpSpeed;
+        }
 
         // Apply gravity
         moveDirection.y -= gravity * Time.deltaTime;
 
         // Move the controller, and set grounded true or false depending on whether we're standing on something
         grounded = (controller.Move(moveDirection * Time.deltaTime) & CollisionFlags.Below) != 0;
+
     }
 
     void Update()
