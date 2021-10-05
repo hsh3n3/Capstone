@@ -15,6 +15,7 @@ public class MouseLook : MonoBehaviour
     float xRotation = 0f;
 
     private float timer = 2.5f;
+    private float a = 1.0f;
 
     public GameObject blackScreenParent;
     public Image blackScreen;
@@ -47,8 +48,13 @@ public class MouseLook : MonoBehaviour
             xRotation = -90f;
             timer -= 1 * Time.deltaTime;
         }
-       else {
+        else {
             playerBody.Rotate(Vector3.up * mouseX); //Horizontal rotation
+        }
+        if (a > 0f)
+        {
+            blackScreen.color = new Color(0, 0, 0, a);
+            a -= 0.25f * Time.deltaTime;
         }
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Vertical Rotation.
 
