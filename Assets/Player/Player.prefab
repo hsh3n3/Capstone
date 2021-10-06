@@ -49,6 +49,7 @@ MonoBehaviour:
   levelMask:
     serializedVersion: 2
     m_Bits: 704
+  moveDirection: {x: 0, y: 0, z: 0}
   controller: {fileID: 3218769024008010991}
 --- !u!114 &8188628950184469911
 MonoBehaviour:
@@ -64,6 +65,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upperEyeLid: {fileID: 8188628951059951988}
   lowerEyeLid: {fileID: 8188628951743481853}
+  timer: 3
 --- !u!1 &2774073881274795043
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,6 +581,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseSensitivity: 300
   playerBody: {fileID: 6931686741845754832}
+  xRotation: 0
 --- !u!114 &3218769025108583966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -710,8 +713,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 200.11005}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 0, y: 381}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8188628951059951986
 CanvasRenderer:
@@ -897,8 +900,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -178.11009}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 0, y: -375}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8188628951743481851
 CanvasRenderer:

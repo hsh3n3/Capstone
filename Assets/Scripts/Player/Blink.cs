@@ -6,8 +6,10 @@ public class Blink : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    private Transform upperEyeLid;
-    private Transform lowerEyeLid;
+    public Transform upperEyeLid;
+    public Transform lowerEyeLid;
+
+    public float timer = 3f;
 
 
 
@@ -19,10 +21,12 @@ public class Blink : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(upperEyeLid.transform.localPosition.y < 625)
+        if(timer > 0)
         {
-            upperEyeLid.transform.localPosition += new Vector3(0, 150, 0) * Time.deltaTime;
-            lowerEyeLid.transform.localPosition += new Vector3(0, -150, 0) * Time.deltaTime;
+            upperEyeLid.transform.localPosition += new Vector3(0, 130, 0) * Time.deltaTime;
+            lowerEyeLid.transform.localPosition += new Vector3(0, -130, 0) * Time.deltaTime;
+
+            timer -= Time.deltaTime;
         }
         
     }
