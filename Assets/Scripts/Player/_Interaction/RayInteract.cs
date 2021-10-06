@@ -17,6 +17,7 @@ public class RayInteract : MonoBehaviour
     public InventoryObject inventory;
 
     private float pickupTextCountDown;
+    private int doOnce = 1; //For some reason, inventory objects were adding multiple times. This is to make sure the Add Item condition only activates once.
     void Awake()
     {
         Layers = -1;
@@ -53,12 +54,13 @@ public class RayInteract : MonoBehaviour
                     {
                         //If this item can be picked up, pick up and destroy.
                         var item = hitObj.GetComponent<AddItem>();
-                        if (item)
+                     if (item && doOnce == 1)
                         {
                             inventory.AddItem(item.item, 1); //Add to inventory
                             Destroy(hitObj.gameObject); //Destroy item you just picked up from game world
                             pickupText.text = ("Picked up " + item.item.itemName); //Displays item you picked up
                             pickupTextCountDown = 1f; //To start fade out of text over time
+                            doOnce = 0;
                         }
                         else if (objComponents[i].GetType().GetMethod(FunctionName) != null) //If item has a function attached 
                         {
@@ -72,6 +74,7 @@ public class RayInteract : MonoBehaviour
             itemText.enabled = false;
             itemText.text = "";
             crosshair.text = ".";
+            doOnce = 1;
         }
         if(pickupTextCountDown > 0) //Start countdown to make item pickup text fade out over time
         {
