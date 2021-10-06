@@ -12,7 +12,8 @@ public class MouseLook : MonoBehaviour
 
     public Transform playerBody; //so that we have something to assign the player camera to.
 
-    float xRotation = 0f;
+   // [HideInInspector]
+    public float xRotation = 0f;
 
     private float timer = 2.5f;
     private float a = 1.0f;

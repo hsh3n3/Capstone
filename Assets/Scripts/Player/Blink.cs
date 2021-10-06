@@ -6,10 +6,16 @@ public class Blink : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public Transform upperEyeLid;
-    public Transform lowerEyeLid;
+    private Transform upperEyeLid;
+    private Transform lowerEyeLid;
 
 
+
+    private void Start()
+    {
+        upperEyeLid = GameObject.Find("UpperEyeLid").transform;
+        lowerEyeLid= GameObject.Find("LowerEyeLid").transform;
+    }
     // Update is called once per frame
     void Update()
     {
