@@ -50,9 +50,9 @@ public class ChangeLevelScript : MonoBehaviour
         {
             look.enabled = false;
             look.xRotation = 0;
-            player.rotation = Quaternion.Euler(-90, 0, 0);
+            player.rotation = Quaternion.Euler(-90, 0, -180);
             playerMovement.enabled = false;
-            player.position = new Vector3(bed.transform.position.x, bed.transform.position.y + 1.5f, bed.transform.position.z + 2f);
+            player.position = new Vector3(bed.transform.position.x, bed.transform.position.y + 1.5f, bed.transform.position.z);
             playerCamera.rotation = Quaternion.Euler(-90, bed.transform.rotation.y, -180);
 
              
