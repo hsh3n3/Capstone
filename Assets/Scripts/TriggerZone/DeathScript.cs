@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class DeathScript : MonoBehaviour
 {
-    public GameObject blackScreenParent;
-    public Image blackScreen;
+    private GameObject blackScreenParent;
+    private Image blackScreen;
 
 
 

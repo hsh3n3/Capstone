@@ -12,7 +12,8 @@ public class MouseLook : MonoBehaviour
 
     public Transform playerBody; //so that we have something to assign the player camera to.
 
-    float xRotation = 0f;
+   // [HideInInspector]
+    public float xRotation = 0f;
 
     private float timer = 2.5f;
     private float a = 1.0f;
@@ -37,8 +38,8 @@ public class MouseLook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime; // Time.deltaTime is used here to ensure sensitivity doesn't change with framerate.
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity; 
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
         xRotation -= mouseY; //-= so that we can look up or down normally, can switch to += if we wish to invert look controls.
         xRotation = Mathf.Clamp(xRotation, -90f, 90f); //Used to clamp rotation, so that you cannot look up or down more than 180 degrees.

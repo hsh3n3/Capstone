@@ -46,7 +46,9 @@ public class PlayerMovement : MonoBehaviour
 
     public LayerMask levelMask; // To set a layer in unity to be 'level' objects for overhead collision checking and ground checking.
 
-    private Vector3 moveDirection = Vector3.zero;
+    [HideInInspector]
+    public Vector3 moveDirection = Vector3.zero;
+
     private bool grounded = false;
     public CharacterController controller;
     private Transform myTransform;
@@ -86,6 +88,14 @@ public class PlayerMovement : MonoBehaviour
         float inputModifyFactor = (inputX != 0.0f && inputY != 0.0f && limitDiagonalSpeed) ? .7071f : 1.0f;
 
         Vector3 p1 = transform.position + controller.center; //Start ray at player character
+
+        if ((controller.collisionFlags & CollisionFlags.Above) != 0)
+        {
+            if (moveDirection.y > 0)
+            {
+                moveDirection.y = -moveDirection.y;
+            }
+        }
 
         if (grounded)
         {
