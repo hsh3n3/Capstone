@@ -8,14 +8,18 @@ public class DeathScript : MonoBehaviour
 {
     private GameObject blackScreenParent;
     private Image blackScreen;
+    private Transform upperEyeLid;
+    private Transform lowerEyeLid;
 
 
 
 
-   
 
     private float a = 0.0f;
     private bool isDead;
+
+    public float speed = 0.33f;
+    public float closeEyesSpeed = 1.0f;
 
     private void Start()
     {
@@ -23,8 +27,10 @@ public class DeathScript : MonoBehaviour
         blackScreen = blackScreenParent.GetComponent(typeof(Image)) as Image;
         blackScreen.color = new Color(0, 0, 0, 0);
         isDead = false;
+        upperEyeLid = GameObject.Find("First Person Player").GetComponent<Blink>().upperEyeLid;
+        lowerEyeLid = GameObject.Find("First Person Player").GetComponent<Blink>().lowerEyeLid;
 
-}
+    }
 
     private void Update()
     {
@@ -33,7 +39,10 @@ public class DeathScript : MonoBehaviour
             if (a < 1f)
             {
                 blackScreen.color = new Color(0, 0, 0, a);
-                a += 0.5f * Time.deltaTime;
+                a += speed * Time.deltaTime;
+                upperEyeLid.transform.localPosition += new Vector3(0, -130, 0) * Time.deltaTime * closeEyesSpeed;
+                lowerEyeLid.transform.localPosition += new Vector3(0, 130, 0) * Time.deltaTime * closeEyesSpeed;
+
             }
             if(a >= 1f)
             {
