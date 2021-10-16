@@ -13,13 +13,13 @@ public class DeathScript : MonoBehaviour
 
 
 
-
-
     private float a = 0.0f;
     private bool isDead;
 
     public float speed = 0.33f;
     public float closeEyesSpeed = 1.0f;
+    public bool instantDeath = false;
+
 
     private void Start()
     {
@@ -34,7 +34,7 @@ public class DeathScript : MonoBehaviour
 
     private void Update()
     {
-        if (isDead)
+        if (isDead && !instantDeath)
         {
             if (a < 1f)
             {
@@ -50,6 +50,20 @@ public class DeathScript : MonoBehaviour
                 Reload();
             }
         }
+        else if(isDead && instantDeath)
+        {
+            if (a < 1f)
+            {
+                blackScreen.color = new Color(0, 0, 0, 1.0f);
+                a += speed * Time.deltaTime;
+            }
+            if (a >= 1f)
+            {
+                Reload();
+            }
+
+        }
+
 
     }
     void OnTriggerEnter(Collider collide)
