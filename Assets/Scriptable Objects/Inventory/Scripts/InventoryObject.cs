@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Inventory", menuName = "Inventory System/Inventory")]
 public class InventoryObject : ScriptableObject
 {
+    public int itemCount = 0;
     public List<InventorySlot> Container = new List<InventorySlot>();
     public void AddItem(ItemObject _item, int _amount)
     {
@@ -14,6 +15,7 @@ public class InventoryObject : ScriptableObject
             if(Container[i].item == _item)
             {
                 Container[i].AddAmount(_amount);
+                itemCount += _amount;
                 hasItem = true;
                 break;
             }    
@@ -23,7 +25,51 @@ public class InventoryObject : ScriptableObject
             Container.Add(new InventorySlot(_item, _amount));
         }
     }
+
+    public void RemoveItem(ItemObject _item, int _amount)
+    {
+        int quantity = itemCount;
+        for (int i = 0; i < Container.Count; i++)
+        {
+            if (Container[i].item == _item && Container[i].amount >= 1)
+            {
+                Container[i].RemoveAmount(_amount);
+                itemCount -= _amount;
+                break;
+            }
+
+        }
+    }
+
+    public bool RemoveItemCheck(ItemObject _item)
+    {
+        bool isGood = false;
+        for (int i = 0; i < Container.Count; i++)
+        {
+            if (Container[i].item == _item && Container[i].amount >= 1)
+            {
+                isGood = true;
+                break;
+            }
+            if (Container[i].item == _item && Container[i].amount <= 0)
+            {
+                isGood = false;
+                break;
+            }
+
+        }
+
+        return isGood;
+
+    }
+    public void update()
+    {
+        itemCount = Container.Count;
+
+    }
 }
+
+
 
 [System.Serializable]
 public class InventorySlot
@@ -38,5 +84,9 @@ public class InventorySlot
     public void AddAmount(int value)
     {
         amount += value;
+    }
+    public void RemoveAmount(int value)
+    {
+        amount -= value;
     }
 }

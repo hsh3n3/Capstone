@@ -12,11 +12,12 @@ public class RayInteract : MonoBehaviour
     public Text crosshair;
     string FunctionName = "Interact"; //function to be called on the object we're interacting with. has to exist in a component attached to the object
 
-    private GameObject canvas;
     public Text pickupText;
     public InventoryObject inventory;
 
     private float pickupTextCountDown;
+
+    private float cooldown = 1f;
     private int doOnce = 1; //For some reason, inventory objects were adding multiple times. This is to make sure the Add Item condition only activates once.
     void Awake()
     {
@@ -53,15 +54,36 @@ public class RayInteract : MonoBehaviour
                     if (Input.GetKey(KeyCode.Mouse0))
                     {
                         //If this item can be picked up, pick up and destroy.
-                        var item = hitObj.GetComponent<AddItem>();
-                     if (item && doOnce == 1)
-                        {
-                            inventory.AddItem(item.item, 1); //Add to inventory
-                            Destroy(hitObj.gameObject); //Destroy item you just picked up from game world
-                            pickupText.text = ("Picked up " + item.item.itemName); //Displays item you picked up
-                            pickupTextCountDown = 1f; //To start fade out of text over time
-                            doOnce = 0;
-                        }
+                        var addItem = hitObj.GetComponent<AddItem>();
+                        var removeItem = hitObj.GetComponent<RemoveItem>();
+                        
+                        if (addItem && doOnce == 1)
+                            {
+                                inventory.AddItem(addItem.item, 1); //Add to inventory
+                                Destroy(hitObj.gameObject); //Destroy item you just picked up from game world
+                                pickupText.text = ("Picked up " + addItem.item.itemName); //Displays item you picked up
+                                pickupTextCountDown = 1f; //To start fade out of text over time
+                                doOnce = 0;
+                            }
+
+                         if (removeItem)
+                            {
+                                if(inventory.RemoveItemCheck(removeItem.item) == true && cooldown <= 0f)
+                                {
+                                    inventory.RemoveItem(removeItem.item, 1);
+                                    pickupText.text = ("Used Item " + removeItem.item.itemName); //Displays item you removed
+                                    pickupTextCountDown = 1f; //To start fade out of text over time
+                                    doOnce = 0;
+                                    cooldown = 1f;
+
+                                }
+                                else if(inventory.RemoveItemCheck(removeItem.item) == false && cooldown <= 0f)
+                                {
+                                    pickupText.text = ("You do not have the required item..."); //Displays item you removed
+                                    pickupTextCountDown = 1f; //To start fade out of text over time
+                                }
+                           
+                            }
                         else if (objComponents[i].GetType().GetMethod(FunctionName) != null) //If item has a function attached 
                         {
                             objComponents[i].GetType().GetMethod(FunctionName).Invoke(objComponents[i], null); //if FunctionName is found on any components attached to the hitObj, call it
@@ -84,6 +106,11 @@ public class RayInteract : MonoBehaviour
         if(pickupTextCountDown <= 0) //(just for good measure) once count down is over, return object text to be nothing.
         {
             pickupText.text = "";
+        }
+
+        if(cooldown > 0f)
+        {
+            cooldown -= Time.deltaTime;
         }
     }
 }
