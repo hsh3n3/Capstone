@@ -63,8 +63,5 @@ public class MouseLook : MonoBehaviour
             a -= 0.5f * Time.deltaTime;
         }
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Vertical Rotation.
-
-
-
     }
 }
