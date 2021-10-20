@@ -13,19 +13,33 @@ public class SpikeWall : MonoBehaviour
     private bool extending;
     [HideInInspector]
     public bool isActive = false;
+    private float waitTime = 0f;
 
+
+    public float WaitSeconds;
     public bool reverse;
     void Start()
     {
         spikes = this.transform;
         timerReset = timer;
         extending = true;
+        waitTime = WaitSeconds;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isActive)
+        if(waitTime > 0)
+        {
+            waitTime -= Time.deltaTime;
+        }
+
+        if (waitTime <= 0)
+        {
+            waitTime = 0;
+        }
+
+        if (isActive && waitTime <= 0)
         {
             if (!reverse)
             {
@@ -55,7 +69,7 @@ public class SpikeWall : MonoBehaviour
 
 
             }
-            if (reverse)
+            if (reverse && waitTime <= 0)
             {
                 if (timer > 0 && extending)
                 {

@@ -17,6 +17,9 @@ public class RayInteract : MonoBehaviour
 
     private float pickupTextCountDown;
 
+    private bool canActivate;
+    private bool locked;
+
     private float cooldown = 1f;
     private int doOnce = 1; //For some reason, inventory objects were adding multiple times. This is to make sure the Add Item condition only activates once.
     void Awake()
@@ -38,59 +41,67 @@ public class RayInteract : MonoBehaviour
             for (int i = 0; i < objComponents.Length; i++)
             {
                 //if (objComponents[i].GetType().GetMethod(FunctionName) != null //if the object has an Interact function
-               // {
-                    if (!hitObj.GetComponent<InteractOutline>()) //let the outline script do its thing
-                    {
-                        hitObj.AddComponent<InteractOutline>();
-                    }
-
-                    //hunter stick your canvas scripting here
+                // {
+                if (!hitObj.GetComponent<InteractOutline>() && !locked) //let the outline script do its thing
+                {
+                    hitObj.AddComponent<InteractOutline>();
                     itemText.text = hitObj.name;
                     itemText.enabled = true;
 
                     crosshair.text = "o";
+                }
 
-                    //Picking up Items in game world
-                    if (Input.GetKey(KeyCode.Mouse0))
+                //hunter stick your canvas scripting here
+              
+
+                //Picking up Items in game world
+                if (Input.GetKey(KeyCode.Mouse0))
+                {
+                    //If this item can be picked up, pick up and destroy.
+                    var addItem = hitObj.GetComponent<AddItem>();
+                    var removeItem = hitObj.GetComponent<RemoveItem>();
+
+                    if (addItem && doOnce == 1 && !locked)
                     {
-                        //If this item can be picked up, pick up and destroy.
-                        var addItem = hitObj.GetComponent<AddItem>();
-                        var removeItem = hitObj.GetComponent<RemoveItem>();
-                        
-                        if (addItem && doOnce == 1)
-                            {
-                                inventory.AddItem(addItem.item, 1); //Add to inventory
-                                Destroy(hitObj.gameObject); //Destroy item you just picked up from game world
-                                pickupText.text = ("Picked up " + addItem.item.itemName); //Displays item you picked up
-                                pickupTextCountDown = 1f; //To start fade out of text over time
-                                doOnce = 0;
-                            }
-
-                         if (removeItem)
-                            {
-                                if(inventory.RemoveItemCheck(removeItem.item) == true && cooldown <= 0f)
-                                {
-                                    inventory.RemoveItem(removeItem.item, 1);
-                                    pickupText.text = ("Used Item " + removeItem.item.itemName); //Displays item you removed
-                                    pickupTextCountDown = 1f; //To start fade out of text over time
-                                    doOnce = 0;
-                                    cooldown = 1f;
-
-                                }
-                                else if(inventory.RemoveItemCheck(removeItem.item) == false && cooldown <= 0f)
-                                {
-                                    pickupText.text = ("You do not have the required item..."); //Displays item you removed
-                                    pickupTextCountDown = 1f; //To start fade out of text over time
-                                }
-                           
-                            }
-                        else if (objComponents[i].GetType().GetMethod(FunctionName) != null) //If item has a function attached 
-                        {
-                            objComponents[i].GetType().GetMethod(FunctionName).Invoke(objComponents[i], null); //if FunctionName is found on any components attached to the hitObj, call it
-                        }
+                        inventory.AddItem(addItem.item, 1); //Add to inventory
+                        Destroy(hitObj.gameObject); //Destroy item you just picked up from game world
+                        pickupText.text = ("Picked up " + addItem.item.itemName); //Displays item you picked up
+                        pickupTextCountDown = 1f; //To start fade out of text over time
+                        doOnce = 0;
                     }
+
+                    if (removeItem && !locked)
+                    {
+                        if (inventory.RemoveItemCheck(removeItem.item) == true && cooldown <= 0f)
+                        {
+                            inventory.RemoveItem(removeItem.item, 1);
+                            pickupText.text = ("Used Item " + removeItem.item.itemName); //Displays item you removed
+                            pickupTextCountDown = 1f; //To start fade out of text over time
+                            doOnce = 0;
+                            cooldown = 1f;
+                            canActivate = true;
+
+                        }
+
+
+                        else if (inventory.RemoveItemCheck(removeItem.item) == false && cooldown <= 0f && !locked)
+                        {
+                            pickupText.text = ("You do not have the required item..."); //Displays item you removed
+                            pickupTextCountDown = 1f; //To start fade out of text over time
+                            canActivate = false;
+                        }
+
+                    }
+                    if (objComponents[i].GetType().GetMethod(FunctionName) != null && canActivate && !locked) //If item has a function attached 
+                    {
+                        objComponents[i].GetType().GetMethod(FunctionName).Invoke(objComponents[i], null); //if FunctionName is found on any components attached to the hitObj, call it
+                        locked = true;
+                    }
+                }
+
             }
         }
+
         else
         {   //Revert to normal settings if not looking at object
             itemText.enabled = false;
