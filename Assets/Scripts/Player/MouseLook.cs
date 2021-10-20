@@ -27,7 +27,7 @@ public class MouseLook : MonoBehaviour
     void Start()
     {
         status = GetComponent<PlayerStatus>();
-        status.SetStatus(PlayerStatus.States.walking);//set status to 'walking' which locks the cursor and hides it
+       // status.SetStatus(PlayerStatus.States.walking);//set status to 'walking' which locks the cursor and hides it
 
         xRotation = -90f; //Starting rotation looking up to go along with player in bed.
         
@@ -48,6 +48,9 @@ public class MouseLook : MonoBehaviour
         xRotation -= mouseY; //-= so that we can look up or down normally, can switch to += if we wish to invert look controls.
         xRotation = Mathf.Clamp(xRotation, -90f, 90f); //Used to clamp rotation, so that you cannot look up or down more than 180 degrees.
 
+
+
+
         if(timer > 0) // Keeping player looking up while eyes open
         {
             xRotation = -90f;
@@ -55,21 +58,22 @@ public class MouseLook : MonoBehaviour
         }
         else {
             playerBody.Rotate(Vector3.up * mouseX); //Horizontal rotation
+            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Vertical Rotation.
         }
         if (a > 0f) // Fade in from black screen
         {
            // blackScreen.color = new Color(0, 0, 0, a);
             a -= 0.5f * Time.deltaTime;
         }
-        PlayerStatus.States s = status.GetStatus();
-        if (s == PlayerStatus.States.walking)
+       // PlayerStatus.States s = status.GetStatus();
+       /* if (s == PlayerStatus.States.walking)
         {
             transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Vertical Rotation.
         }
         else if (s == PlayerStatus.States.antigravity)
         {
 
-        }
+        } */
 
     }
 }
