@@ -9,7 +9,7 @@ public class ActivateSpikes : MonoBehaviour
     public GameObject spikeWall2;
     private void Start()
     {
-       
+
     }
 
     void OnTriggerEnter(Collider collide)
