@@ -19,14 +19,15 @@ public class door_interact : MonoBehaviour
     {
         if (isUnlocked && doOnce)
         {
-            door.localPosition = new Vector3(-2, 0, -2);
-            door.localRotation = new Quaternion(0, -90, 0, 0);
             doOnce = false;
         }
     }
     public void Interact()
     {
+        Debug.Log("Door open");
         isUnlocked = true;
         doOnce = true;
+        door.localPosition += new Vector3(-2, 0, -2);
+        door.Rotate(new Vector3(0, -90, 0));
     }
 }
