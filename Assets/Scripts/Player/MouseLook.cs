@@ -65,19 +65,26 @@ public class MouseLook : MonoBehaviour
            // blackScreen.color = new Color(0, 0, 0, a);
             a -= 0.5f * Time.deltaTime;
         }
-<<<<<<< HEAD
-       // PlayerStatus.States s = status.GetStatus();
-       /* if (s == PlayerStatus.States.walking)
-        {
-            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Vertical Rotation.
-        }
-        else if (s == PlayerStatus.States.antigravity)
-        {
+//<<<<<<< HEAD
+//       // PlayerStatus.States s = status.GetStatus();
+//       /* if (s == PlayerStatus.States.walking)
+//        {
+//            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Vertical Rotation.
+//        }
+//        else if (s == PlayerStatus.States.antigravity)
+//        {
 
-        } */
+//        } */
 
-=======
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Vertical Rotation.
->>>>>>> 1d42a6ec9d93d364bfc6ec11f794671e019081bb
+//=======
+//        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Vertical Rotation.
+//>>>>>>> 1d42a6ec9d93d364bfc6ec11f794671e019081bb
+
+
+
+
+
+
+
     }
 }

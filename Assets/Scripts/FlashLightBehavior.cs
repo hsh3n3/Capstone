@@ -24,6 +24,7 @@ public class FlashLightBehavior : MonoBehaviour
             {
                 spotLight.SetActive(true);
                 flashLightOn = true;
+                System.Console.Write("FlashLight On");
             }
 
             else

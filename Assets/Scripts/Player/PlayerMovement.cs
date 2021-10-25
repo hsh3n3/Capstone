@@ -11,6 +11,8 @@ public class PlayerMovement : MonoBehaviour
 
     public float crouchSpeed = 3.0f;
 
+   
+
     // If true, diagonal speed (when strafing + moving forward or back) can't exceed normal move speed; otherwise it's about 1.4 times faster
     public bool limitDiagonalSpeed = true;
 
@@ -64,6 +66,8 @@ public class PlayerMovement : MonoBehaviour
     private bool canStand;
     private bool isCrouching;
 
+
+
     private float originalJumpSpeed;
 
     private float timer = 2.5f; //for freezing movement when waking up.
@@ -77,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
         slideLimit = controller.slopeLimit - .1f;
         jumpTimer = antiBunnyHopFactor;
         originalJumpSpeed = jumpSpeed;
+        
     }
 
     void FixedUpdate()
@@ -86,7 +91,7 @@ public class PlayerMovement : MonoBehaviour
         float inputY = Input.GetAxis("Vertical");
         // If both horizontal and vertical are used simultaneously, limit speed (if allowed), so the total doesn't exceed normal move speed
         float inputModifyFactor = (inputX != 0.0f && inputY != 0.0f && limitDiagonalSpeed) ? .7071f : 1.0f;
-
+       
         Vector3 p1 = transform.position + controller.center; //Start ray at player character
 
         if ((controller.collisionFlags & CollisionFlags.Above) != 0)
@@ -270,6 +275,8 @@ public class PlayerMovement : MonoBehaviour
     // have hitpoints and remove some of them based on the distance fallen, add sound effects, etc.
     void FallingDamageAlert(float fallDistance)
     {
+
         print("Ouch! Fell " + fallDistance + " units!");
+        
     }
 }
