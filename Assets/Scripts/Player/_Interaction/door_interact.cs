@@ -29,5 +29,6 @@ public class door_interact : MonoBehaviour
         doOnce = true;
         door.localPosition += new Vector3(-2, 0, -2);
         door.Rotate(new Vector3(0, -90, 0));
+        door.gameObject.layer = 0;
     }
 }
