@@ -196,7 +196,7 @@ QualitySettings:
     - Windows Store Apps
   - serializedVersion: 2
     name: Ultra
-    pixelLightCount: 4
+    pixelLightCount: 9
     shadows: 2
     shadowResolution: 2
     shadowProjection: 1
