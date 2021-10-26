@@ -230,7 +230,6 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     customRenderPipeline: {fileID: 0}
     excludedTargetPlatforms:
-    - Standalone
     - Windows Store Apps
   m_PerPlatformDefaultQuality:
     Standalone: 0
