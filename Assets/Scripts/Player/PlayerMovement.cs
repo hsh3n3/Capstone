@@ -46,6 +46,8 @@ public class PlayerMovement : MonoBehaviour
 
     public LayerMask levelMask; // To set a layer in unity to be 'level' objects for overhead collision checking and ground checking.
 
+    public Transform flashlight;
+
     [HideInInspector]
     public Vector3 moveDirection = Vector3.zero;
 
@@ -175,6 +177,12 @@ public class PlayerMovement : MonoBehaviour
                 {
                     controller.gameObject.transform.localScale -= (new Vector3(0, 1, 0) * Time.deltaTime);
                     controller.Move(new Vector3(0, -1.75f, 0) * Time.deltaTime);
+                    flashlight.localPosition += new Vector3(0, 1f, 0) * Time.deltaTime;
+
+                    flashlight.localScale += (new Vector3(0, 400, 0) * Time.deltaTime);
+
+
+
                 }
                 //Making sure player is exactly crouch height
                 else
@@ -202,6 +210,9 @@ public class PlayerMovement : MonoBehaviour
                 {
                     controller.gameObject.transform.localScale += (new Vector3(0, 1, 0) * Time.deltaTime);
                     controller.Move(new Vector3(0, 1.75f, 0) * Time.deltaTime);
+
+                    flashlight.localScale -= (new Vector3(0, 400, 0) * Time.deltaTime);
+                    flashlight.localPosition += new Vector3(0, -1f, 0) * Time.deltaTime;
                 }
                 //Making sure player is exactly normal height
                 else

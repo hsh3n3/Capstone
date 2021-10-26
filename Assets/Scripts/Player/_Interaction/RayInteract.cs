@@ -90,7 +90,14 @@ public class RayInteract : MonoBehaviour
                             canActivate = false;
                         }
 
+                        
+
                     }
+                    else
+                    {
+                        canActivate = true;
+                    }
+
                     if (objComponents[i].GetType().GetMethod(FunctionName) != null && canActivate) //If item has a function attached 
                     {
                         objComponents[i].GetType().GetMethod(FunctionName).Invoke(objComponents[i], null); //if FunctionName is found on any components attached to the hitObj, call it
