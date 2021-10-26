@@ -6,23 +6,17 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
 
-    public Slider slider;
-
+    public Slider Healthslider;
+  
 
 
 
     public void SetHealth(float health)
     {
-        slider.value = health;
+        print("Current Health:" + health);
+        Healthslider.value = health;
     }
 
-
-   
-
-    public void SetStamia(float stamina)
-    {
-        slider.value = stamina;
-    }
 
 
 }

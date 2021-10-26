@@ -11,8 +11,6 @@ public class PlayerMovement : MonoBehaviour
 
     public float crouchSpeed = 3.0f;
 
-   
-
     // If true, diagonal speed (when strafing + moving forward or back) can't exceed normal move speed; otherwise it's about 1.4 times faster
     public bool limitDiagonalSpeed = true;
 
@@ -275,7 +273,6 @@ public class PlayerMovement : MonoBehaviour
     // have hitpoints and remove some of them based on the distance fallen, add sound effects, etc.
     void FallingDamageAlert(float fallDistance)
     {
-
         print("Ouch! Fell " + fallDistance + " units!");
         
     }
