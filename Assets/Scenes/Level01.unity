@@ -2272,7 +2272,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &747673264
 GameObject:
@@ -6214,6 +6214,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7536263163573880045, guid: 7f02b3cfb2765f74883bd439128b9c88,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7536263163573880045, guid: 7f02b3cfb2765f74883bd439128b9c88,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7536263163573880045, guid: 7f02b3cfb2765f74883bd439128b9c88,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8721143248088979170, guid: 7f02b3cfb2765f74883bd439128b9c88,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -606.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8721143248088979170, guid: 7f02b3cfb2765f74883bd439128b9c88,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -292.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8721143248088979170, guid: 7f02b3cfb2765f74883bd439128b9c88,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -178.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f02b3cfb2765f74883bd439128b9c88, type: 3}
 --- !u!1001 &3462859194261249848
@@ -6223,6 +6253,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 637931900}
     m_Modifications:
+    - target: {fileID: 1494524333617179540, guid: a4f6e356005fd784888936a5c28aab35,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.022
+      objectReference: {fileID: 0}
     - target: {fileID: 3462859194543649225, guid: a4f6e356005fd784888936a5c28aab35,
         type: 3}
       propertyPath: m_Name

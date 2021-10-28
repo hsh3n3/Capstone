@@ -21,13 +21,12 @@ public class MouseLook : MonoBehaviour
     private GameObject blackScreenParent;
     private Image blackScreen;
 
-    private PlayerStatus status;
+    public PlayerStatus status;
 
     // Start is called before the first frame update
     void Start()
     {
-        status = GetComponent<PlayerStatus>();
-        // status.SetStatus(PlayerStatus.States.walking);//set status to 'walking' which locks the cursor and hides it
+        status.SetStatus(PlayerStatus.States.walking);//set status to 'walking' which locks the cursor and hides it
 
         xRotation = -90f; //Starting rotation looking up to go along with player in bed.
 
