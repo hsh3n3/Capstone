@@ -11,6 +11,8 @@ public class DeathScript : MonoBehaviour
     private Transform upperEyeLid;
     private Transform lowerEyeLid;
 
+    public InventoryObject inventory;
+
 
 
     private float a = 0.0f;
@@ -47,6 +49,7 @@ public class DeathScript : MonoBehaviour
             if(a >= 1f)
             {
                 blackScreen.color = new Color(0, 0, 0, 1.0f);
+                inventory.ClearInventory();
                 Reload();
             }
         }
@@ -59,6 +62,7 @@ public class DeathScript : MonoBehaviour
             }
             if (a >= 1f)
             {
+                inventory.ClearInventory();
                 Reload();
             }
 

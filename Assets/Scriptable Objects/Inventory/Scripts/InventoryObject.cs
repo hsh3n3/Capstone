@@ -5,7 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Inventory", menuName = "Inventory System/Inventory")]
 public class InventoryObject : ScriptableObject
 {
-    public int itemCount = 0;
     public List<InventorySlot> Container = new List<InventorySlot>();
     public void AddItem(ItemObject _item, int _amount)
     {
@@ -15,7 +14,6 @@ public class InventoryObject : ScriptableObject
             if(Container[i].item == _item)
             {
                 Container[i].AddAmount(_amount);
-                itemCount += _amount;
                 hasItem = true;
                 break;
             }    
@@ -28,17 +26,28 @@ public class InventoryObject : ScriptableObject
 
     public void RemoveItem(ItemObject _item, int _amount)
     {
-        int quantity = itemCount;
         for (int i = 0; i < Container.Count; i++)
         {
             if (Container[i].item == _item && Container[i].amount >= 1)
             {
                 Container[i].RemoveAmount(_amount);
-                itemCount -= _amount;
                 break;
             }
 
         }
+    }
+
+    public void ClearInventory()
+    {
+        for (int i = 0; i < Container.Count; i++)
+        {
+            if (Container[i].item != null)
+            {
+                Container[i].item = null;
+            }
+
+        }
+
     }
 
     public bool RemoveItemCheck(ItemObject _item)
@@ -64,7 +73,6 @@ public class InventoryObject : ScriptableObject
     }
     public void update()
     {
-        itemCount = Container.Count;
 
     }
 }
