@@ -11,6 +11,8 @@ public class FlashLightBehavior : MonoBehaviour
     public InventoryObject inventory;
     private MeshRenderer flashlightRender;
 
+    private bool doOnce;
+
 
 
 
@@ -22,23 +24,29 @@ public class FlashLightBehavior : MonoBehaviour
 
         flashlightRender = flashlight.GetComponent<MeshRenderer>();
 
+        doOnce = true;
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
         var checkHasItem = flashlight.GetComponent<RemoveItemCheck>();
-        if (inventory.RemoveItemCheck(checkHasItem.item) == true)
+        if (inventory.RemoveItemCheck(checkHasItem.item) == true && doOnce)
         {
 
             flashlightRender.enabled = true;
+            spotLight.SetActive(true);
+            doOnce = false;
 
 
         }
-        else
+        else if (inventory.RemoveItemCheck(checkHasItem.item) == false)
         {
             flashlightRender.enabled = false;
             spotLight.SetActive(false);
+            doOnce = true;
         }
 
         if (flashlightRender.enabled == true)
