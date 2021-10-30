@@ -12,7 +12,7 @@ public class MouseLook : MonoBehaviour
 
     public Transform playerBody; //so that we have something to assign the player camera to.
 
-   // [HideInInspector]
+    // [HideInInspector]
     public float xRotation = 0f;
 
     private float timer = 2.5f;
@@ -29,7 +29,7 @@ public class MouseLook : MonoBehaviour
         status.SetStatus(PlayerStatus.States.walking);//set status to 'walking' which locks the cursor and hides it
 
         xRotation = -90f; //Starting rotation looking up to go along with player in bed.
-        
+
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
         blackScreenParent = GameObject.Find("BlackScreen");
@@ -41,7 +41,7 @@ public class MouseLook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity; 
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
         xRotation -= mouseY; //-= so that we can look up or down normally, can switch to += if we wish to invert look controls.
@@ -50,30 +50,30 @@ public class MouseLook : MonoBehaviour
 
 
 
-        if(timer > 0) // Keeping player looking up while eyes open
+        if (timer > 0) // Keeping player looking up while eyes open
         {
             xRotation = -90f;
             timer -= 1 * Time.deltaTime;
         }
-        else {
+        else
+        {
             playerBody.Rotate(Vector3.up * mouseX); //Horizontal rotation
             transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Vertical Rotation.
         }
         if (a > 0f) // Fade in from black screen
         {
-           // blackScreen.color = new Color(0, 0, 0, a);
+            // blackScreen.color = new Color(0, 0, 0, a);
             a -= 0.5f * Time.deltaTime;
         }
 
-       // PlayerStatus.States s = status.GetStatus();
-       /* if (s == PlayerStatus.States.walking)
-        {
-            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Vertical Rotation.
-        }
-        else if (s == PlayerStatus.States.antigravity)
-        {
-
-        } */
+        // PlayerStatus.States s = status.GetStatus();
+        /* if (s == PlayerStatus.States.walking)
+         {
+             transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Vertical Rotation.
+         }
+         else if (s == PlayerStatus.States.antigravity)
+         {
+         } */
 
 
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Vertical Rotation.
