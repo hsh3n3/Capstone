@@ -117,12 +117,12 @@ public class PlayerMovement : MonoBehaviour
             if (footstepTimer <= 0 && (inputX > 0 || inputY > 0) && !isCrouching)
             {
                 PlayRandomFootstepAudio();
-                footstepTimer = 0.5f;
+                footstepTimer = 0.52f;
             }
             else if (footstepTimer <= 0 && (inputX > 0 || inputY > 0) && isCrouching)
             {
                 PlayRandomFootstepAudio();
-                footstepTimer = 0.6f;
+                footstepTimer = 0.65f;
             }
             bool sliding = false;
             // See if surface immediately below should be slid down. We use this normally rather than a ControllerColliderHit point,
