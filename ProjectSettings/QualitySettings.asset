@@ -22,12 +22,12 @@ QualitySettings:
     textureQuality: 3
     anisotropicTextures: 0
     antiAliasing: 0
-    softParticles: 0
+    softParticles: 1
     softVegetation: 0
     realtimeReflectionProbes: 0
     billboardsFaceCameraPosition: 0
     vSyncCount: 0
-    lodBias: 0.3
+    lodBias: 2
     maximumLODLevel: 0
     streamingMipmapsActive: 0
     streamingMipmapsAddAllCameras: 1
@@ -79,4 +79,5 @@ QualitySettings:
     customRenderPipeline: {fileID: 0}
     excludedTargetPlatforms:
     - Windows Store Apps
-  m_PerPlatformDefaultQuality: {}
+  m_PerPlatformDefaultQuality:
+    Standalone: 0
