@@ -54,10 +54,9 @@ public class PlayerMovement : MonoBehaviour
 
     public AudioClip[] footstepsAudio;
     public AudioClip[] jumpAudio;
-    public AudioSource audioSource;
-    public AudioSource audioSource2;
-    public AudioSource audioSource3;
-    public AudioSource audioSource4;
+    public AudioSource audioSourceFeet;
+    public AudioSource audioSourceMouth;
+    public AudioSource audioSourceOther;
 
 
 
@@ -119,14 +118,19 @@ public class PlayerMovement : MonoBehaviour
         if (grounded)
         {
             //Play footstep sounds if moving.
-            if (footstepTimer <= 0 && (inputX > 0 || inputY > 0) && !isCrouching)
+            if (footstepTimer <= 0 && (inputX > 0 || inputY > 0) && !isCrouching && speed == walkSpeed)
             {
-                PlayRandomAudio(footstepsAudio,audioSource);
+                PlayRandomAudio(footstepsAudio,audioSourceFeet);
                 footstepTimer = 0.52f;
+            }
+            if (footstepTimer <= 0 && (inputX > 0 || inputY > 0) && !isCrouching && speed == runSpeed)
+            {
+                PlayRandomAudio(footstepsAudio, audioSourceFeet);
+                footstepTimer = 0.4f;
             }
             else if (footstepTimer <= 0 && (inputX > 0 || inputY > 0) && isCrouching)
             {
-                PlayRandomAudio(footstepsAudio,audioSource);
+                PlayRandomAudio(footstepsAudio,audioSourceFeet);
                 footstepTimer = 0.65f;
             }
             bool sliding = false;
@@ -158,6 +162,8 @@ public class PlayerMovement : MonoBehaviour
             if (!toggleRun)
                 speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
 
+  
+
             // If sliding (and it's allowed), or if we're on an object tagged "Slide", get a vector pointing down the slope we're on
             if ((sliding && slideWhenOverSlopeLimit) || (slideOnTaggedObjects && hit.collider.tag == "Slide"))
             {
@@ -180,7 +186,7 @@ public class PlayerMovement : MonoBehaviour
             // Jump! But only if the jump button has been released and player has been grounded for a given number of frames
             if(Input.GetButton("Jump") && grounded)
             {
-                PlayRandomAudio(jumpAudio,audioSource2);
+                PlayRandomAudio(jumpAudio,audioSourceMouth);
             }
             if (!Input.GetButton("Jump"))
                 jumpTimer++;
