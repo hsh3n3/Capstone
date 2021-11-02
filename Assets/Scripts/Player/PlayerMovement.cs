@@ -53,7 +53,12 @@ public class PlayerMovement : MonoBehaviour
     public Transform flashlight;
 
     public AudioClip[] footstepsAudio;
+    public AudioClip[] jumpAudio;
     public AudioSource audioSource;
+    public AudioSource audioSource2;
+    public AudioSource audioSource3;
+    public AudioSource audioSource4;
+
 
 
     [HideInInspector]
@@ -116,12 +121,12 @@ public class PlayerMovement : MonoBehaviour
             //Play footstep sounds if moving.
             if (footstepTimer <= 0 && (inputX > 0 || inputY > 0) && !isCrouching)
             {
-                PlayRandomFootstepAudio();
+                PlayRandomAudio(footstepsAudio,audioSource);
                 footstepTimer = 0.52f;
             }
             else if (footstepTimer <= 0 && (inputX > 0 || inputY > 0) && isCrouching)
             {
-                PlayRandomFootstepAudio();
+                PlayRandomAudio(footstepsAudio,audioSource);
                 footstepTimer = 0.65f;
             }
             bool sliding = false;
@@ -173,6 +178,10 @@ public class PlayerMovement : MonoBehaviour
             }
 
             // Jump! But only if the jump button has been released and player has been grounded for a given number of frames
+            if(Input.GetButton("Jump") && grounded)
+            {
+                PlayRandomAudio(jumpAudio,audioSource2);
+            }
             if (!Input.GetButton("Jump"))
                 jumpTimer++;
             else if (jumpTimer >= antiBunnyHopFactor)
@@ -317,11 +326,11 @@ public class PlayerMovement : MonoBehaviour
     }
 
     //plays random audio from a list of audio (for footsteps, etc)
-    void PlayRandomFootstepAudio()
+    void PlayRandomAudio(AudioClip[] AudioList, AudioSource source)
     {
-        audioSource.clip = footstepsAudio[Random.Range(0, footstepsAudio.Length)];
-        audioSource.Play();
+        source.clip = AudioList[Random.Range(0, AudioList.Length)];
+        source.Play();
 
-
+        
     }
 }
