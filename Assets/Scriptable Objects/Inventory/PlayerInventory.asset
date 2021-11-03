@@ -15,9 +15,9 @@ MonoBehaviour:
   Container:
   - item: {fileID: 11400000, guid: b83e45e199e570444adeed6247c81aed, type: 2}
     amount: 1
-  - item: {fileID: 11400000, guid: fe4268528b98d934eb5d77ea19a14d5a, type: 2}
+  - item: {fileID: 0}
     amount: 0
   - item: {fileID: 0}
     amount: 0
-  - item: {fileID: 11400000, guid: b83e45e199e570444adeed6247c81aed, type: 2}
+  - item: {fileID: 0}
     amount: 2

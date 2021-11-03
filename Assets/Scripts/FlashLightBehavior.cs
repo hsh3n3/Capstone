@@ -11,6 +11,8 @@ public class FlashLightBehavior : MonoBehaviour
     public InventoryObject inventory;
     private MeshRenderer flashlightRender;
 
+    public AudioSource flashlightAudio;
+
     private bool doOnce;
 
 
@@ -35,7 +37,7 @@ public class FlashLightBehavior : MonoBehaviour
         var checkHasItem = flashlight.GetComponent<RemoveItemCheck>();
         if (inventory.RemoveItemCheck(checkHasItem.item) == true && doOnce)
         {
-
+            flashlightAudio.Play();
             flashlightRender.enabled = true;
             spotLight.SetActive(true);
             doOnce = false;
@@ -57,12 +59,14 @@ public class FlashLightBehavior : MonoBehaviour
                 {
                     spotLight.SetActive(true);
                     flashLightOn = true;
+                    flashlightAudio.Play();
                 }
 
                 else
                 {
                     spotLight.SetActive(false);
                     flashLightOn = false;
+                    flashlightAudio.Play();
                 }
             }
         }
