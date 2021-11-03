@@ -10,6 +10,8 @@ public class door_interact : MonoBehaviour
     private Transform door;
     private bool doOnce = false;
 
+    public AudioSource doorOpenAudio;
+
     public void Start()
     {
         door = this.transform;
@@ -24,12 +26,10 @@ public class door_interact : MonoBehaviour
     }
     public void Interact()
     {
-        Debug.Log("Door open");
         isUnlocked = true;
         doOnce = true;
+        doorOpenAudio.Play();
         GetComponent<Animation>().Play();
-        //door.localPosition += new Vector3(-2, 0, -2);
-        //door.Rotate(new Vector3(0, -90, 0));
         door.gameObject.layer = 0;
     }
 }
