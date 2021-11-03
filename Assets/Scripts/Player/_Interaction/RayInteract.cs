@@ -15,6 +15,8 @@ public class RayInteract : MonoBehaviour
     public Text pickupText;
     public InventoryObject inventory;
 
+    public AudioSource addItemAudio;
+
     private float pickupTextCountDown;
 
     private bool canActivate;
@@ -62,6 +64,7 @@ public class RayInteract : MonoBehaviour
 
                     if (addItem && doOnce == 1)
                     {
+                        addItemAudio.Play();
                         inventory.AddItem(addItem.item, 1); //Add to inventory
                         Destroy(hitObj.gameObject); //Destroy item you just picked up from game world
                         pickupText.text = ("Picked up " + addItem.item.itemName); //Displays item you picked up

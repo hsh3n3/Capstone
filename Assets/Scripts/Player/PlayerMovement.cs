@@ -118,16 +118,19 @@ public class PlayerMovement : MonoBehaviour
         if (grounded)
         {
             //Play footstep sounds if moving.
+            //Regular Speed
             if (footstepTimer <= 0 && (inputX > 0 || inputY > 0) && !isCrouching && speed == walkSpeed)
             {
                 PlayRandomAudio(footstepsAudio,audioSourceFeet);
                 footstepTimer = 0.52f;
             }
+            //Sprinting
             if (footstepTimer <= 0 && (inputX > 0 || inputY > 0) && !isCrouching && speed == runSpeed)
             {
                 PlayRandomAudio(footstepsAudio, audioSourceFeet);
                 footstepTimer = 0.4f;
             }
+            //Crouching
             else if (footstepTimer <= 0 && (inputX > 0 || inputY > 0) && isCrouching)
             {
                 PlayRandomAudio(footstepsAudio,audioSourceFeet);
@@ -154,6 +157,9 @@ public class PlayerMovement : MonoBehaviour
             if (falling)
             {
                 falling = false;
+                //Play audio when landing on ground
+                PlayRandomAudio(footstepsAudio, audioSourceFeet);
+                 
                 if (myTransform.position.y < fallStartLevel - fallingDamageThreshold)
                     FallingDamageAlert(fallStartLevel - myTransform.position.y);
             }
