@@ -7,6 +7,11 @@ TagManager:
   - Interactable
   - BlackScreen
   - DeathZone
+  - Concrete
+  - Ground
+  - Wood
+  - Carpet
+  - Metal
   layers:
   - Default
   - TransparentFX

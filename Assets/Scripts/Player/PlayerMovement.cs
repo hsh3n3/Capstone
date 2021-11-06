@@ -52,6 +52,8 @@ public class PlayerMovement : MonoBehaviour
 
     public Transform flashlight;
 
+    public string groundType = "null"; //Used for footsteps audio, passed info in from raycast.
+
     public AudioClip[] footstepsAudio;
     public AudioClip[] jumpAudio;
     public AudioSource audioSourceFeet;
@@ -62,12 +64,15 @@ public class PlayerMovement : MonoBehaviour
 
     [HideInInspector]
     public Vector3 moveDirection = Vector3.zero;
+    [HideInInspector]
+    public RaycastHit hit;
 
     private bool grounded = false;
     public CharacterController controller;
     private Transform myTransform;
     private float speed;
-    private RaycastHit hit;
+
+
     private float fallStartLevel;
     private bool falling;
     private float slideLimit;
@@ -99,7 +104,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-      
+        Debug.Log(groundType);
         float inputX = Input.GetAxis("Horizontal");
         float inputY = Input.GetAxis("Vertical");
         // If both horizontal and vertical are used simultaneously, limit speed (if allowed), so the total doesn't exceed normal move speed
@@ -143,6 +148,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (Vector3.Angle(hit.normal, Vector3.up) > slideLimit)
                     sliding = true;
+
+                groundType = hit.transform.tag;
             }
             // However, just raycasting straight down from the center can fail when on steep slopes
             // So if the above raycast didn't catch anything, raycast down from the stored ControllerColliderHit point instead
@@ -151,6 +158,8 @@ public class PlayerMovement : MonoBehaviour
                 Physics.Raycast(contactPoint + Vector3.up, -Vector3.up, out hit);
                 if (Vector3.Angle(hit.normal, Vector3.up) > slideLimit)
                     sliding = true;
+
+                groundType = hit.transform.tag;
             }
 
             // If we were falling, and we fell a vertical distance greater than the threshold, run a falling damage routine
@@ -338,7 +347,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     //plays random audio from a list of audio (for footsteps, etc)
-    void PlayRandomAudio(AudioClip[] AudioList, AudioSource source)
+    public void PlayRandomAudio(AudioClip[] AudioList, AudioSource source)
     {
         source.clip = AudioList[Random.Range(0, AudioList.Length)];
         source.Play();
