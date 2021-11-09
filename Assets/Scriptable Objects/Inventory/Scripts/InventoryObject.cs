@@ -41,10 +41,8 @@ public class InventoryObject : ScriptableObject
     {
         for (int i = 0; i < Container.Count; i++)
         {
-            if (Container[i].item != null)
-            {
-                Container[i].item = null;
-            }
+            Container[i].item = null;
+            Container[i].amount = 0;
 
         }
 

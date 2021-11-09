@@ -9,7 +9,11 @@ public class PlayerMovement : MonoBehaviour
 
     public float runSpeed = 11.0f;
 
-    public float crouchSpeed = 3.0f;
+    private float crouchSpeed = 3.0f;
+
+    public float crouchMultiplier = 0.4f;
+
+    private float footstepTimer;
 
     // If true, diagonal speed (when strafing + moving forward or back) can't exceed normal move speed; otherwise it's about 1.4 times faster
     public bool limitDiagonalSpeed = true;
@@ -48,14 +52,27 @@ public class PlayerMovement : MonoBehaviour
 
     public Transform flashlight;
 
+    public string groundType = "null"; //Used for footsteps audio, passed info in from raycast.
+
+    public AudioClip[] footstepsAudio;
+    public AudioClip[] jumpAudio;
+    public AudioSource audioSourceFeet;
+    public AudioSource audioSourceMouth;
+    public AudioSource audioSourceOther;
+
+
+
     [HideInInspector]
     public Vector3 moveDirection = Vector3.zero;
+    [HideInInspector]
+    public RaycastHit hit;
 
     private bool grounded = false;
     public CharacterController controller;
     private Transform myTransform;
     private float speed;
-    private RaycastHit hit;
+
+
     private float fallStartLevel;
     private bool falling;
     private float slideLimit;
@@ -81,12 +98,13 @@ public class PlayerMovement : MonoBehaviour
         slideLimit = controller.slopeLimit - .1f;
         jumpTimer = antiBunnyHopFactor;
         originalJumpSpeed = jumpSpeed;
+        footstepTimer = 0;
         
     }
 
     void FixedUpdate()
     {
-      
+        Debug.Log(groundType);
         float inputX = Input.GetAxis("Horizontal");
         float inputY = Input.GetAxis("Vertical");
         // If both horizontal and vertical are used simultaneously, limit speed (if allowed), so the total doesn't exceed normal move speed
@@ -104,6 +122,25 @@ public class PlayerMovement : MonoBehaviour
 
         if (grounded)
         {
+            //Play footstep sounds if moving.
+            //Regular Speed
+            if (footstepTimer <= 0 && (inputX > 0 || inputY > 0) && !isCrouching && speed == walkSpeed)
+            {
+                PlayRandomAudio(footstepsAudio,audioSourceFeet);
+                footstepTimer = 0.52f;
+            }
+            //Sprinting
+            if (footstepTimer <= 0 && (inputX > 0 || inputY > 0) && !isCrouching && speed == runSpeed)
+            {
+                PlayRandomAudio(footstepsAudio, audioSourceFeet);
+                footstepTimer = 0.4f;
+            }
+            //Crouching
+            else if (footstepTimer <= 0 && (inputX > 0 || inputY > 0) && isCrouching)
+            {
+                PlayRandomAudio(footstepsAudio,audioSourceFeet);
+                footstepTimer = 0.65f;
+            }
             bool sliding = false;
             // See if surface immediately below should be slid down. We use this normally rather than a ControllerColliderHit point,
             // because that interferes with step climbing amongst other annoyances
@@ -111,6 +148,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (Vector3.Angle(hit.normal, Vector3.up) > slideLimit)
                     sliding = true;
+
+                groundType = hit.transform.tag;
             }
             // However, just raycasting straight down from the center can fail when on steep slopes
             // So if the above raycast didn't catch anything, raycast down from the stored ControllerColliderHit point instead
@@ -119,12 +158,17 @@ public class PlayerMovement : MonoBehaviour
                 Physics.Raycast(contactPoint + Vector3.up, -Vector3.up, out hit);
                 if (Vector3.Angle(hit.normal, Vector3.up) > slideLimit)
                     sliding = true;
+
+                groundType = hit.transform.tag;
             }
 
             // If we were falling, and we fell a vertical distance greater than the threshold, run a falling damage routine
             if (falling)
             {
                 falling = false;
+                //Play audio when landing on ground
+                PlayRandomAudio(footstepsAudio, audioSourceFeet);
+                 
                 if (myTransform.position.y < fallStartLevel - fallingDamageThreshold)
                     FallingDamageAlert(fallStartLevel - myTransform.position.y);
             }
@@ -132,6 +176,8 @@ public class PlayerMovement : MonoBehaviour
             // If running isn't on a toggle, then use the appropriate speed depending on whether the run button is down
             if (!toggleRun)
                 speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
+
+  
 
             // If sliding (and it's allowed), or if we're on an object tagged "Slide", get a vector pointing down the slope we're on
             if ((sliding && slideWhenOverSlopeLimit) || (slideOnTaggedObjects && hit.collider.tag == "Slide"))
@@ -148,9 +194,15 @@ public class PlayerMovement : MonoBehaviour
                 moveDirection = new Vector3(inputX * inputModifyFactor, -antiBumpFactor, inputY * inputModifyFactor);
                 moveDirection = myTransform.TransformDirection(moveDirection) * speed;
                 playerControl = true;
+
+              
             }
 
             // Jump! But only if the jump button has been released and player has been grounded for a given number of frames
+            if(Input.GetButton("Jump") && grounded)
+            {
+                PlayRandomAudio(jumpAudio,audioSourceMouth);
+            }
             if (!Input.GetButton("Jump"))
                 jumpTimer++;
             else if (jumpTimer >= antiBunnyHopFactor)
@@ -174,7 +226,8 @@ public class PlayerMovement : MonoBehaviour
             //if crouching, set crouching height and remove jump
             if (isCrouching)
             {
-
+                moveDirection *= crouchMultiplier;
+                controller.Move(moveDirection * Time.deltaTime * crouchMultiplier);
                 //Slow transform to make crouch animation smoother
                 if (controller.gameObject.transform.localScale.y > crouchHeight.y)
                 {
@@ -203,6 +256,8 @@ public class PlayerMovement : MonoBehaviour
                 {
                     canStand = true;
                 }
+
+                
             }
             //If not crouching, stand up
             else
@@ -261,6 +316,8 @@ public class PlayerMovement : MonoBehaviour
         // Apply gravity
         moveDirection.y -= gravity * Time.deltaTime;
 
+        footstepTimer -= Time.deltaTime;
+
         // Move the controller, and set grounded true or false depending on whether we're standing on something
         grounded = (controller.Move(moveDirection * Time.deltaTime) & CollisionFlags.Below) != 0;
 
@@ -272,6 +329,7 @@ public class PlayerMovement : MonoBehaviour
         // FixedUpdate is a poor place to use GetButtonDown, since it doesn't necessarily run every frame and can miss the event)
         if (toggleRun && grounded && Input.GetKey(KeyCode.LeftShift))
             speed = (speed == walkSpeed ? runSpeed : walkSpeed);
+       
     }
 
     // Store point that we're in contact with for use in FixedUpdate if needed
@@ -285,6 +343,15 @@ public class PlayerMovement : MonoBehaviour
     void FallingDamageAlert(float fallDistance)
     {
         print("Ouch! Fell " + fallDistance + " units!");
+        
+    }
+
+    //plays random audio from a list of audio (for footsteps, etc)
+    public void PlayRandomAudio(AudioClip[] AudioList, AudioSource source)
+    {
+        source.clip = AudioList[Random.Range(0, AudioList.Length)];
+        source.Play();
+
         
     }
 }

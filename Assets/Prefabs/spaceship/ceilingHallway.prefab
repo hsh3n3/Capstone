@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8040807097568325674}
   - component: {fileID: 6357240859866496911}
   - component: {fileID: 9213665173097679685}
+  - component: {fileID: -6553257116424075087}
   m_Layer: 10
   m_Name: ceilingHallway
   m_TagString: Untagged
@@ -81,3 +82,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &-6553257116424075087
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7268105942008310416}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 1344337027531075907, guid: 2518d53c753658442aee28153d0a085f, type: 3}
