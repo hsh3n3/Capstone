@@ -4,29 +4,22 @@ using UnityEngine;
 
 public class MenuCamera : MonoBehaviour
 {
-    public float MaxAngle;
+    public Transform pivot;
     void Update()
     {
         Vector2 mp = Input.mousePosition;
-        Vector2 max = new Vector2(Screen.width, Screen.height);
+        Vector2 s = new Vector2(Screen.width, Screen.height);
+        Vector2 middle = new Vector2(Screen.width / 2, Screen.height / 2);
 
-        Vector2 relativePosition;
-
-        if (mp.x < Screen.width / 2)
+        if ((mp.x > s.x) || (mp.x < s.x))
         {
-
+            mp.x = s.x;
         }
-        else
+        if ((mp.y > s.y) || (mp.y < s.y))
         {
-
+            mp.y = s.y;
         }
-        if (mp.y < Screen.width / 2)
-        {
 
-        }
-        else
-        {
-
-        }
+        pivot.eulerAngles = new Vector3(0, Vector2.Distance(mp, middle), 0);
     }
 }
