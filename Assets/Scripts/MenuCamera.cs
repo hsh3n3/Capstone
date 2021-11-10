@@ -10,7 +10,7 @@ public class MenuCamera : MonoBehaviour
         Vector2 mp = Input.mousePosition;
         Vector2 s = new Vector2(Screen.width, Screen.height);
         Vector2 middle = new Vector2(Screen.width / 2, Screen.height / 2);
-
+        /*
         if ((mp.x > s.x) || (mp.x < s.x))
         {
             mp.x = s.x;
@@ -19,7 +19,7 @@ public class MenuCamera : MonoBehaviour
         {
             mp.y = s.y;
         }
-
-        pivot.eulerAngles = new Vector3(0, Vector2.Distance(mp, middle), 0);
+        */
+        pivot.eulerAngles = new Vector3((mp.y/middle.y)*4, 120-(mp.x/middle.y)*6, 0);
     }
 }
